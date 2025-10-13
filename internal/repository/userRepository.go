@@ -115,7 +115,7 @@ func (r userRepository) Create(ctx context.Context, user domain.User) error {
 
 func (r userRepository) Update(ctx context.Context, user domain.User) error {
 	if user.ID == "" {
-		return errors.New("user ID is nil")
+		return errors.New("user ID is empty")
 	}
 
 	q := "UPDATE auth.users SET name=$1, password=$2 WHERE id=$3 AND deleted_at IS NULL"
