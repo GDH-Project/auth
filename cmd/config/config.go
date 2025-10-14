@@ -8,7 +8,8 @@ import (
 )
 
 type EnvConfig struct {
-	DbUrl string `env:"DB_URL,required"`
+	DbUrl     string `env:"DB_URL,required"`
+	JWTSecret string `env:"JWT_SECRET,required"`
 }
 
 func GetConfig() *EnvConfig {
