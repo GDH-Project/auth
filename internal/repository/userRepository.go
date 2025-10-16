@@ -14,7 +14,7 @@ type userRepository struct {
 	db *pgxpool.Pool
 }
 
-func (r userRepository) CheckCanCreate(ctx context.Context, user domain.User) bool {
+func (r *userRepository) CheckCanCreate(ctx context.Context, user domain.User) bool {
 	u := &domain.User{}
 	q := "SELECT id FROM auth.user_with_role WHERE email = $1 OR name = $2 "
 
@@ -29,7 +29,7 @@ func (r userRepository) CheckCanCreate(ctx context.Context, user domain.User) bo
 	return false
 }
 
-func (r userRepository) Find(ctx context.Context, user domain.User) (*domain.User, error) {
+func (r *userRepository) Find(ctx context.Context, user domain.User) (*domain.User, error) {
 	type target struct {
 		key   string
 		value string
@@ -67,7 +67,7 @@ func (r userRepository) Find(ctx context.Context, user domain.User) (*domain.Use
 	return u, nil
 }
 
-func (r userRepository) Create(ctx context.Context, user domain.User) error {
+func (r *userRepository) Create(ctx context.Context, user domain.User) error {
 	if canCreate := r.CheckCanCreate(ctx, user); !canCreate {
 		return errors.New("user already exists")
 	}
@@ -113,7 +113,7 @@ func (r userRepository) Create(ctx context.Context, user domain.User) error {
 	return nil
 }
 
-func (r userRepository) Update(ctx context.Context, user domain.User) error {
+func (r *userRepository) Update(ctx context.Context, user domain.User) error {
 	if user.ID == "" {
 		return errors.New("user ID is empty")
 	}
@@ -129,7 +129,7 @@ func (r userRepository) Update(ctx context.Context, user domain.User) error {
 	return nil
 }
 
-func (r userRepository) Delete(ctx context.Context, id string) error {
+func (r *userRepository) Delete(ctx context.Context, id string) error {
 	q := "UPDATE auth.users SET deleted_at = NOW() WHERE id = $1;"
 	if _, err := r.db.Exec(ctx, q, id); err != nil {
 		return err
