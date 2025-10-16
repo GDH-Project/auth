@@ -1,6 +1,10 @@
 package domain
 
-import "context"
+import (
+	"context"
+
+	apperror "github.com/GDH-Project/auth/internal/resource/common/app_error"
+)
 
 type Role string
 
@@ -19,16 +23,16 @@ type User struct {
 }
 
 type UserRepository interface {
-	Find(ctx context.Context, user User) (*User, error)
-	CheckCanCreate(ctx context.Context, user User) bool
-	Create(ctx context.Context, user User) error
-	Update(ctx context.Context, user User) error
-	Delete(ctx context.Context, id string) error
+	Find(ctx context.Context, user *User) (*User, *apperror.Error)
+	CheckCanCreate(ctx context.Context, user *User) *apperror.Error
+	Create(ctx context.Context, user *User) *apperror.Error
+	Update(ctx context.Context, user *User) *apperror.Error
+	Delete(ctx context.Context, user *User) *apperror.Error
 }
 
 type UserUseCase interface {
-	FindUser(ctx context.Context, email string) (*User, error)
-	CreateUser(ctx context.Context, user User) error
-	UpdateUser(ctx context.Context, user User) error
-	DeleteUser(ctx context.Context, id string) error
+	FindUser(ctx context.Context, user *User) (*User, *apperror.Error)
+	CreateUser(ctx context.Context, user *User) *apperror.Error
+	UpdateUser(ctx context.Context, user *User) *apperror.Error
+	DeleteUser(ctx context.Context, user *User) *apperror.Error
 }
