@@ -21,14 +21,16 @@ type LoginLog struct {
 	Status    LoginStatus
 }
 type Token struct {
+	UserID       string
 	AccessToken  string    `json:"access_token"`
 	RefreshToken string    `json:"refresh_token"`
 	ExpiresAt    time.Time `json:"expires_at"` // RefreshToken 만료 시간
 }
 type AuthRepository interface {
-	InsertLoginLog(*LoginLog) error
-	InsertToken(*Token) error
-	DeleteToken(*Token) error
+	InsertLoginLog(ctx context.Context, loginLog *LoginLog) error
+	InsertToken(ctx context.Context, token *Token) error
+	GetToken(ctx context.Context, token *Token) (*Token, error)
+	DeleteToken(ctx context.Context, token *Token) error
 }
 
 type AuthUseCase interface {
