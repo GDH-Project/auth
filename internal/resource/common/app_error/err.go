@@ -13,6 +13,7 @@ const (
 	UserRoleBindFailed   Code = "USER_BINDING_ROLE_FAILED"
 	InternalServerError  Code = "INTERNAL_SERVER_ERROR"
 	ParameterNotMatch    Code = "PARAMETER_NOT_MATCH"
+	BadRequest           Code = "BAD_REQUEST"
 )
 
 type Error struct {

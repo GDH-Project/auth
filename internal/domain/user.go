@@ -31,9 +31,10 @@ type UserRepository interface {
 }
 
 type UserService interface {
+	CheckCanCreate(ctx context.Context, user *User) *apperror.Error
 	CreateNewUser(ctx context.Context, user *User) *apperror.Error
-	GetUserByEmail(ctx context.Context, email string) (*User, *apperror.Error)
-	GetUserByUserId(ctx context.Context, id string) (*User, *apperror.Error)
+	FindUserByEmail(ctx context.Context, email string) (*User, *apperror.Error)
+	FindUserByUserId(ctx context.Context, id string) (*User, *apperror.Error)
 	DeleteUserById(ctx context.Context, id string) *apperror.Error
 	UpdateUserByUserID(ctx context.Context, id string, user *User) *apperror.Error
 }
@@ -41,7 +42,7 @@ type UserService interface {
 type UserUseCase interface {
 	CreateUser(ctx context.Context, user *User) *apperror.Error
 	UpdateUserByUserID(ctx context.Context, user *User) *apperror.Error
-	DeleteUserByUserIDAndPassword(ctx context.Context, id string, user *User) *apperror.Error
-	GetUserByEmail(ctx context.Context, email string) (*User, *apperror.Error)
-	GetUserByUserID(ctx context.Context, id string) (*User, *apperror.Error)
+	DeleteUserByUserIDAndPassword(ctx context.Context, id string, password string) *apperror.Error
+	FindUserByEmail(ctx context.Context, email string) (*User, *apperror.Error)
+	FindUserByUserID(ctx context.Context, id string) (*User, *apperror.Error)
 }
