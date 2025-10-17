@@ -36,7 +36,7 @@ type AuthRepository interface {
 type AuthService interface {
 	InsertLoginLog(ctx context.Context, loginLog *LoginLog) error
 	GetTokenByUserIDAndToken(ctx context.Context, token *Token) (*Token, error)
-	InsertToken(ctx context.Context, token *Token) (*Token, error)
+	InsertToken(ctx context.Context, token *Token) error
 	DeleteTokenByUserID(ctx context.Context, userID string) error
 }
 
