@@ -13,7 +13,7 @@ type authRepository struct {
 	db        *pgxpool.Pool
 }
 
-func (r *authRepository) GetToken(ctx context.Context, t *domain.Token) (*domain.Token, error) {
+func (r *authRepository) GetTokenByUserIDAndToken(ctx context.Context, t *domain.Token) (*domain.Token, error) {
 	token := &domain.Token{}
 
 	q := `
@@ -52,11 +52,6 @@ func (r *authRepository) InsertLoginLog(ctx context.Context, loginLog *domain.Lo
 }
 
 func (r *authRepository) InsertToken(ctx context.Context, token *domain.Token) error {
-	// 기존 토큰 제거
-	if err := r.DeleteToken(ctx, token); err != nil {
-		return err
-	}
-
 	// 전달된 토큰 생성
 	q := "INSERT INTO auth.tokens(user_id, refresh_token, expires_at) VALUES ($1,$2,$3);"
 	if _, err := r.db.Exec(ctx, q,
@@ -69,11 +64,10 @@ func (r *authRepository) InsertToken(ctx context.Context, token *domain.Token) e
 	return nil
 }
 
-func (r *authRepository) DeleteToken(ctx context.Context, token *domain.Token) error {
-	q := "DELETE FROM auth.tokens WHERE user_id = $1 AND refresh_token = $2;"
+func (r *authRepository) DeleteTokenByUserID(ctx context.Context, userID string) error {
+	q := "DELETE FROM auth.tokens WHERE user_id = $1;"
 	if _, err := r.db.Exec(ctx, q,
-		token.UserID,
-		token.RefreshToken,
+		userID,
 	); err != nil {
 		return err
 	}
