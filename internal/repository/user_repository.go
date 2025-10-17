@@ -55,7 +55,7 @@ func (r *userRepository) Find(ctx context.Context, user *domain.User) (*domain.U
 	} else {
 		return nil, &apperror.Error{
 			Code:        apperror.ParameterNotMatch,
-			UserMessage: "파라미터가 잘못 입려되었습니다.",
+			UserMessage: "파라미터가 잘못 입력되었습니다.",
 			DevMessage:  fmt.Sprintf("user 검색 조건이 유효하지 않습니다. id, email, name 중 한가지를 선택해야 합니다.(%+v)", user),
 			StatusCode:  http.StatusBadRequest,
 			Cause:       errors.New("파라미터가 잘못 입력되었습니다"),
