@@ -11,15 +11,19 @@ type userService struct {
 	r domain.UserRepository
 }
 
+func (svc *userService) CheckCanCreate(ctx context.Context, user *domain.User) *apperror.Error {
+	return svc.r.CheckCanCreate(ctx, user)
+}
+
 func (svc *userService) CreateNewUser(ctx context.Context, user *domain.User) *apperror.Error {
 	return svc.r.Create(ctx, user)
 }
 
-func (svc *userService) GetUserByEmail(ctx context.Context, email string) (*domain.User, *apperror.Error) {
+func (svc *userService) FindUserByEmail(ctx context.Context, email string) (*domain.User, *apperror.Error) {
 	return svc.r.Find(ctx, &domain.User{Email: email})
 }
 
-func (svc *userService) GetUserByUserId(ctx context.Context, id string) (*domain.User, *apperror.Error) {
+func (svc *userService) FindUserByUserId(ctx context.Context, id string) (*domain.User, *apperror.Error) {
 	return svc.r.Find(ctx, &domain.User{ID: id})
 }
 
