@@ -30,9 +30,18 @@ type UserRepository interface {
 	Delete(ctx context.Context, user *User) *apperror.Error
 }
 
+type UserService interface {
+	CreateNewUser(ctx context.Context, user *User) *apperror.Error
+	GetUserByEmail(ctx context.Context, email string) (*User, *apperror.Error)
+	GetUserByUserId(ctx context.Context, id string) (*User, *apperror.Error)
+	DeleteUserById(ctx context.Context, id string) *apperror.Error
+	UpdateUserByUserID(ctx context.Context, id string, user *User) *apperror.Error
+}
+
 type UserUseCase interface {
-	FindUser(ctx context.Context, user *User) (*User, *apperror.Error)
 	CreateUser(ctx context.Context, user *User) *apperror.Error
-	UpdateUser(ctx context.Context, user *User) *apperror.Error
-	DeleteUser(ctx context.Context, user *User) *apperror.Error
+	UpdateUserByUserID(ctx context.Context, user *User) *apperror.Error
+	DeleteUserByUserIDAndPassword(ctx context.Context, id string, user *User) *apperror.Error
+	GetUserByEmail(ctx context.Context, email string) (*User, *apperror.Error)
+	GetUserByUserID(ctx context.Context, id string) (*User, *apperror.Error)
 }
