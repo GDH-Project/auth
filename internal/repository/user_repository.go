@@ -8,7 +8,6 @@ import (
 
 	"github.com/GDH-Project/auth/internal/domain"
 	apperror "github.com/GDH-Project/auth/internal/resource/common/app_error"
-	"github.com/GDH-Project/auth/internal/util"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -90,10 +89,6 @@ func (r *userRepository) Find(ctx context.Context, user *domain.User) (*domain.U
 }
 
 func (r *userRepository) Create(ctx context.Context, user *domain.User) *apperror.Error {
-	if err := r.CheckCanCreate(ctx, user); err != nil {
-		return err
-	}
-
 	tx, err := r.db.Begin(ctx)
 	if err != nil {
 		return &apperror.Error{
@@ -175,7 +170,13 @@ func (r *userRepository) Update(ctx context.Context, user *domain.User) *apperro
 		}
 	}
 
-	q := "UPDATE auth.users SET name=$1, password=$2 WHERE id=$3 AND deleted_at IS NULL"
+	q := `
+			UPDATE auth.users 
+			SET 
+			    name = COALESCE(NULLIF($1,''), name), 
+			    password = COALESCE(NULLIF($2,''), password)
+			WHERE 
+			    id=$3 AND deleted_at IS NULL`
 	if _, err := r.db.Exec(ctx, q,
 		user.Name,
 		user.Password,
@@ -193,20 +194,6 @@ func (r *userRepository) Update(ctx context.Context, user *domain.User) *apperro
 }
 
 func (r *userRepository) Delete(ctx context.Context, user *domain.User) *apperror.Error {
-	targetUser, err := r.Find(ctx, &domain.User{ID: user.ID})
-	if err != nil {
-		return err
-	}
-
-	if isMatched, _ := util.CheckPasswordHash(user.Password, targetUser.Password); !isMatched {
-		return &apperror.Error{
-			Code:        apperror.UserPasswordNotMatch,
-			UserMessage: "비밀번호가 일치하지 않습니다.",
-			StatusCode:  http.StatusBadRequest,
-			Cause:       errors.New("비밀번호가 일치하지 않습니다"),
-		}
-	}
-
 	q := "UPDATE auth.users SET deleted_at = NOW() WHERE id = $1"
 	if _, err := r.db.Exec(ctx, q, user.ID); err != nil {
 		return &apperror.Error{
