@@ -30,10 +30,17 @@ func (uc *userUseCase) CreateUser(ctx context.Context, user *domain.User) *apper
 			Cause:       err,
 		}
 	}
-	user.Password = hashedPassword
+
+	createUserData := &domain.User{
+		ID:       user.ID,
+		Name:     user.Name,
+		Email:    user.Email,
+		Password: hashedPassword,
+		Role:     user.Role,
+	}
 
 	// 유저 생성
-	if err := uc.userSvc.CreateNewUser(ctx, user); err != nil {
+	if err := uc.userSvc.CreateNewUser(ctx, createUserData); err != nil {
 		return err
 	}
 
