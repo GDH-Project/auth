@@ -14,8 +14,8 @@ func (svc *authService) InsertLoginLog(ctx context.Context, loginLog *domain.Log
 	return svc.r.InsertLoginLog(ctx, loginLog)
 }
 
-func (svc *authService) GetTokenByUserIDAndToken(ctx context.Context, token *domain.Token) (*domain.Token, error) {
-	return svc.r.GetTokenByUserIDAndToken(ctx, token)
+func (svc *authService) GetTokenByUserIDOrToken(ctx context.Context, token *domain.Token) (*domain.Token, error) {
+	return svc.r.GetTokenByUserIDOrToken(ctx, token)
 }
 
 func (svc *authService) InsertToken(ctx context.Context, token *domain.Token) error {
