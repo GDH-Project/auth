@@ -6,16 +6,31 @@ import (
 
 	apperror "github.com/GDH-Project/auth/internal/resource/common/app_error"
 	"github.com/golang-jwt/jwt/v5"
+	"go.uber.org/zap"
 )
 
+type JWTClaims struct {
+	UserID   string `json:"user_id"`
+	UserRole string `json:"user_role"`
+	jwt.RegisteredClaims
+}
+
 func GenerateJWTToken(secret []byte, userId string, userRole string) (string, *apperror.Error) {
-	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user_id":   userId,
-		"user_role": userRole,
-		"exp":       time.Now().Add(time.Hour * 2).Unix(),
+	expiredTime := time.Now().Add(12 * time.Hour)
+	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, &JWTClaims{
+		UserID:   userId,
+		UserRole: userRole,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(expiredTime),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			NotBefore: jwt.NewNumericDate(time.Now()),
+			Issuer:    "GDH-auth",
+			Subject:   userId,
+		},
 	}).SignedString(secret)
 
 	if err != nil {
+		zap.S().Error("JWT 생성중 알 수 없는 오류가 발생했습니다.", zap.Error(err))
 		return "", &apperror.Error{
 			Code:        apperror.InternalServerError,
 			UserMessage: "토큰을 생성하지 못했습니다.",
@@ -28,8 +43,8 @@ func GenerateJWTToken(secret []byte, userId string, userRole string) (string, *a
 	return token, nil
 }
 
-func VerifyJWTToken(secret []byte, tokenString string) (*jwt.Token, *apperror.Error) {
-	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) { return secret, nil })
+func VerifyJWTToken(secret []byte, tokenString string) (*JWTClaims, *apperror.Error) {
+	token, err := jwt.ParseWithClaims(tokenString, &JWTClaims{}, func(t *jwt.Token) (interface{}, error) { return secret, nil })
 	if err != nil {
 		return nil, &apperror.Error{
 			Code:        apperror.BadRequest,
@@ -40,5 +55,16 @@ func VerifyJWTToken(secret []byte, tokenString string) (*jwt.Token, *apperror.Er
 		}
 	}
 
-	return token, nil
+	// TODO 검증
+	claims, ok := token.Claims.(*JWTClaims)
+	if ok && token.Valid {
+		return claims, nil
+	}
+
+	return nil, &apperror.Error{
+		Code:        apperror.BadRequest,
+		UserMessage: "토큰이 유효하지 않습니다.",
+		StatusCode:  http.StatusBadRequest,
+		Cause:       nil,
+	}
 }
