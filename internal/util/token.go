@@ -55,7 +55,7 @@ func VerifyJWTToken(secret []byte, tokenString string) (*JWTClaims, *apperror.Er
 		}
 	}
 
-	// TODO 검증
+	// 토큰 검증
 	claims, ok := token.Claims.(*JWTClaims)
 	if ok && token.Valid {
 		return claims, nil
