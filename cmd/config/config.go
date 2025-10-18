@@ -1,10 +1,9 @@
 package config
 
 import (
-	"log"
-
 	"github.com/caarlos0/env/v11"
 	_ "github.com/joho/godotenv/autoload"
+	"go.uber.org/zap"
 )
 
 type EnvConfig struct {
@@ -16,8 +15,9 @@ func GetConfig() *EnvConfig {
 	config := &EnvConfig{}
 
 	if err := env.Parse(config); err != nil {
-		log.Fatalf("env를 파싱할 수 없습니다. %v", err)
+		zap.S().Fatalw("Failed to parse env", "error", err)
 	}
 
+	zap.S().Info("env Load OK")
 	return config
 }
