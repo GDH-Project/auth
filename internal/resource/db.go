@@ -2,10 +2,10 @@ package resource
 
 import (
 	"context"
-	"log"
 
 	c "github.com/GDH-Project/auth/cmd/config"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"go.uber.org/zap"
 )
 
 func InitDB(cfg *c.EnvConfig) *pgxpool.Pool {
@@ -13,19 +13,25 @@ func InitDB(cfg *c.EnvConfig) *pgxpool.Pool {
 
 	config, err := pgxpool.ParseConfig(target)
 	if err != nil {
-		log.Fatalf("failed to parse DB config :%v", err)
+		zap.S().Fatalw("failed to parse DB config",
+			"error", err,
+		)
 	}
 
 	pool, err := pgxpool.NewWithConfig(context.Background(), config)
 	if err != nil {
-		log.Fatalf("failed to connect to DB :%v", err)
+		zap.S().Fatalw("failed to connect to DB",
+			"error", err,
+		)
 	}
 
 	if err = pool.Ping(context.Background()); err != nil {
-		log.Fatalf("failed to ping DB :%v", err)
+		zap.S().Fatalw("failed to ping DB",
+			"error", err,
+		)
 	}
 
-	log.Println("Database connection pool initialized successfully")
+	zap.S().Info("Database connection pool initialized successfully")
 
 	return pool
 }
