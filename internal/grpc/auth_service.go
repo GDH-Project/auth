@@ -16,7 +16,7 @@ type AuthService struct {
 
 func (s *AuthService) Login(ctx context.Context, req *authpb.LoginRequest) (*authpb.LoginResponse, error) {
 	loginLog := makeLoginLog(ctx)
-	token, err := s.authUseCase.LoginWithPassword(ctx, req.Email, req.Password, loginLog)
+	token, err := s.authUseCase.LoginWithPassword(ctx, req.GetEmail(), req.GetPassword(), loginLog)
 	if err != nil {
 		zap.S().Infow("로그인 실패", "email", req.Email, zap.Error(err))
 		return nil, errors.New("이메일 혹은 패스워드를 확인해주세요")
@@ -34,7 +34,7 @@ func (s *AuthService) Login(ctx context.Context, req *authpb.LoginRequest) (*aut
 }
 
 func (s *AuthService) Logout(ctx context.Context, req *authpb.LogoutRequest) (*authpb.LogoutResponse, error) {
-	err := s.authUseCase.Logout(ctx, req.AccessToken)
+	err := s.authUseCase.Logout(ctx, req.GetAccessToken())
 	if err != nil {
 		zap.S().Infow("토큰이 유효하지 않습니다.", zap.Error(err))
 		return nil, errors.New("토큰이 유효하지 않습니다")
@@ -43,7 +43,7 @@ func (s *AuthService) Logout(ctx context.Context, req *authpb.LogoutRequest) (*a
 }
 
 func (s *AuthService) RefreshToken(ctx context.Context, req *authpb.RefreshTokenRequest) (*authpb.RefreshTokenResponse, error) {
-	token, err := s.authUseCase.RefreshToken(ctx, req.RefreshToken)
+	token, err := s.authUseCase.RefreshToken(ctx, req.GetRefreshToken())
 	if err != nil {
 		zap.S().Infow("토큰이 유효하지 않습니다.", zap.Error(err))
 		return nil, errors.New("토큰이 유효하지 않습니다")
@@ -56,7 +56,7 @@ func (s *AuthService) RefreshToken(ctx context.Context, req *authpb.RefreshToken
 }
 
 func (s *AuthService) Validate(ctx context.Context, req *authpb.ValidateRequest) (*authpb.ValidateResponse, error) {
-	user, err := s.authUseCase.ValidateToken(ctx, req.AccessToken)
+	user, err := s.authUseCase.ValidateToken(ctx, req.GetAccessToken())
 	if err != nil {
 		zap.S().Infow("토큰이 유효하지 않습니다.", zap.Error(err))
 		return nil, errors.New("토큰이 유효하지 않습니다")
