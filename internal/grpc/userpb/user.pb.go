@@ -116,7 +116,7 @@ func (CreateUserType) EnumDescriptor() ([]byte, []int) {
 	return file_user_proto_rawDescGZIP(), []int{1}
 }
 
-type GetCheckCreateUserReqeust struct {
+type GetCheckCreateUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
@@ -124,20 +124,20 @@ type GetCheckCreateUserReqeust struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetCheckCreateUserReqeust) Reset() {
-	*x = GetCheckCreateUserReqeust{}
+func (x *GetCheckCreateUserRequest) Reset() {
+	*x = GetCheckCreateUserRequest{}
 	mi := &file_user_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetCheckCreateUserReqeust) String() string {
+func (x *GetCheckCreateUserRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetCheckCreateUserReqeust) ProtoMessage() {}
+func (*GetCheckCreateUserRequest) ProtoMessage() {}
 
-func (x *GetCheckCreateUserReqeust) ProtoReflect() protoreflect.Message {
+func (x *GetCheckCreateUserRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_user_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -149,19 +149,19 @@ func (x *GetCheckCreateUserReqeust) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetCheckCreateUserReqeust.ProtoReflect.Descriptor instead.
-func (*GetCheckCreateUserReqeust) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetCheckCreateUserRequest.ProtoReflect.Descriptor instead.
+func (*GetCheckCreateUserRequest) Descriptor() ([]byte, []int) {
 	return file_user_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *GetCheckCreateUserReqeust) GetEmail() string {
+func (x *GetCheckCreateUserRequest) GetEmail() string {
 	if x != nil {
 		return x.Email
 	}
 	return ""
 }
 
-func (x *GetCheckCreateUserReqeust) GetName() string {
+func (x *GetCheckCreateUserRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
@@ -650,7 +650,7 @@ const file_user_proto_rawDesc = "" +
 	"\n" +
 	"\n" +
 	"user.proto\x12\x04user\"E\n" +
-	"\x19GetCheckCreateUserReqeust\x12\x14\n" +
+	"\x19GetCheckCreateUserRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\",\n" +
 	"\x1aGetCheckCreateUserResponse\x12\x0e\n" +
@@ -691,7 +691,7 @@ const file_user_proto_rawDesc = "" +
 	"basic_user\x10\x00\x12\r\n" +
 	"\tdata_user\x10\x012\xf8\x02\n" +
 	"\vUserService\x12T\n" +
-	"\x0fCheckCreateUser\x12\x1f.user.GetCheckCreateUserReqeust\x1a .user.GetCheckCreateUserResponse\x12P\n" +
+	"\x0fCheckCreateUser\x12\x1f.user.GetCheckCreateUserRequest\x1a .user.GetCheckCreateUserResponse\x12P\n" +
 	"\x12GetUserInfoByEmail\x12\x1f.user.GetUserInfoByEmailRequest\x1a\x19.user.GetUserInfoResponse\x12?\n" +
 	"\n" +
 	"CreateUser\x12\x17.user.CreateUserRequest\x1a\x18.user.CreateUserResponse\x12?\n" +
@@ -717,7 +717,7 @@ var file_user_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_user_proto_goTypes = []any{
 	(UserRole)(0),                      // 0: user.UserRole
 	(CreateUserType)(0),                // 1: user.CreateUserType
-	(*GetCheckCreateUserReqeust)(nil),  // 2: user.GetCheckCreateUserReqeust
+	(*GetCheckCreateUserRequest)(nil),  // 2: user.GetCheckCreateUserRequest
 	(*GetCheckCreateUserResponse)(nil), // 3: user.GetCheckCreateUserResponse
 	(*GetUserInfoByEmailRequest)(nil),  // 4: user.GetUserInfoByEmailRequest
 	(*GetUserInfoResponse)(nil),        // 5: user.GetUserInfoResponse
@@ -732,7 +732,7 @@ var file_user_proto_depIdxs = []int32{
 	0,  // 0: user.GetUserInfoResponse.role:type_name -> user.UserRole
 	1,  // 1: user.CreateUserRequest.type:type_name -> user.CreateUserType
 	0,  // 2: user.UpdateUserResponse.role:type_name -> user.UserRole
-	2,  // 3: user.UserService.CheckCreateUser:input_type -> user.GetCheckCreateUserReqeust
+	2,  // 3: user.UserService.CheckCreateUser:input_type -> user.GetCheckCreateUserRequest
 	4,  // 4: user.UserService.GetUserInfoByEmail:input_type -> user.GetUserInfoByEmailRequest
 	6,  // 5: user.UserService.CreateUser:input_type -> user.CreateUserRequest
 	8,  // 6: user.UserService.UpdateUser:input_type -> user.UpdateUserRequest

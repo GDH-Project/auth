@@ -31,7 +31,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	// rpc GetUserInfoByUserID(GetUserInfoByUserIDRequest) returns (GetUserInfoResponse);
-	CheckCreateUser(ctx context.Context, in *GetCheckCreateUserReqeust, opts ...grpc.CallOption) (*GetCheckCreateUserResponse, error)
+	CheckCreateUser(ctx context.Context, in *GetCheckCreateUserRequest, opts ...grpc.CallOption) (*GetCheckCreateUserResponse, error)
 	GetUserInfoByEmail(ctx context.Context, in *GetUserInfoByEmailRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
@@ -46,7 +46,7 @@ func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 	return &userServiceClient{cc}
 }
 
-func (c *userServiceClient) CheckCreateUser(ctx context.Context, in *GetCheckCreateUserReqeust, opts ...grpc.CallOption) (*GetCheckCreateUserResponse, error) {
+func (c *userServiceClient) CheckCreateUser(ctx context.Context, in *GetCheckCreateUserRequest, opts ...grpc.CallOption) (*GetCheckCreateUserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetCheckCreateUserResponse)
 	err := c.cc.Invoke(ctx, UserService_CheckCreateUser_FullMethodName, in, out, cOpts...)
@@ -101,7 +101,7 @@ func (c *userServiceClient) DeleteUser(ctx context.Context, in *DeleteUserReques
 // for forward compatibility.
 type UserServiceServer interface {
 	// rpc GetUserInfoByUserID(GetUserInfoByUserIDRequest) returns (GetUserInfoResponse);
-	CheckCreateUser(context.Context, *GetCheckCreateUserReqeust) (*GetCheckCreateUserResponse, error)
+	CheckCreateUser(context.Context, *GetCheckCreateUserRequest) (*GetCheckCreateUserResponse, error)
 	GetUserInfoByEmail(context.Context, *GetUserInfoByEmailRequest) (*GetUserInfoResponse, error)
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
@@ -116,7 +116,7 @@ type UserServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserServiceServer struct{}
 
-func (UnimplementedUserServiceServer) CheckCreateUser(context.Context, *GetCheckCreateUserReqeust) (*GetCheckCreateUserResponse, error) {
+func (UnimplementedUserServiceServer) CheckCreateUser(context.Context, *GetCheckCreateUserRequest) (*GetCheckCreateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckCreateUser not implemented")
 }
 func (UnimplementedUserServiceServer) GetUserInfoByEmail(context.Context, *GetUserInfoByEmailRequest) (*GetUserInfoResponse, error) {
@@ -153,7 +153,7 @@ func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
 }
 
 func _UserService_CheckCreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCheckCreateUserReqeust)
+	in := new(GetCheckCreateUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -165,7 +165,7 @@ func _UserService_CheckCreateUser_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: UserService_CheckCreateUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).CheckCreateUser(ctx, req.(*GetCheckCreateUserReqeust))
+		return srv.(UserServiceServer).CheckCreateUser(ctx, req.(*GetCheckCreateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
