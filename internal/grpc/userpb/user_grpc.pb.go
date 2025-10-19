@@ -19,6 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	UserService_CheckCreateUser_FullMethodName    = "/user.UserService/CheckCreateUser"
 	UserService_GetUserInfoByEmail_FullMethodName = "/user.UserService/GetUserInfoByEmail"
 	UserService_CreateUser_FullMethodName         = "/user.UserService/CreateUser"
 	UserService_UpdateUser_FullMethodName         = "/user.UserService/UpdateUser"
@@ -30,6 +31,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	// rpc GetUserInfoByUserID(GetUserInfoByUserIDRequest) returns (GetUserInfoResponse);
+	CheckCreateUser(ctx context.Context, in *GetCheckCreateUserReqeust, opts ...grpc.CallOption) (*GetCheckCreateUserResponse, error)
 	GetUserInfoByEmail(ctx context.Context, in *GetUserInfoByEmailRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
@@ -42,6 +44,16 @@ type userServiceClient struct {
 
 func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 	return &userServiceClient{cc}
+}
+
+func (c *userServiceClient) CheckCreateUser(ctx context.Context, in *GetCheckCreateUserReqeust, opts ...grpc.CallOption) (*GetCheckCreateUserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCheckCreateUserResponse)
+	err := c.cc.Invoke(ctx, UserService_CheckCreateUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *userServiceClient) GetUserInfoByEmail(ctx context.Context, in *GetUserInfoByEmailRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error) {
@@ -89,6 +101,7 @@ func (c *userServiceClient) DeleteUser(ctx context.Context, in *DeleteUserReques
 // for forward compatibility.
 type UserServiceServer interface {
 	// rpc GetUserInfoByUserID(GetUserInfoByUserIDRequest) returns (GetUserInfoResponse);
+	CheckCreateUser(context.Context, *GetCheckCreateUserReqeust) (*GetCheckCreateUserResponse, error)
 	GetUserInfoByEmail(context.Context, *GetUserInfoByEmailRequest) (*GetUserInfoResponse, error)
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
@@ -103,6 +116,9 @@ type UserServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUserServiceServer struct{}
 
+func (UnimplementedUserServiceServer) CheckCreateUser(context.Context, *GetCheckCreateUserReqeust) (*GetCheckCreateUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CheckCreateUser not implemented")
+}
 func (UnimplementedUserServiceServer) GetUserInfoByEmail(context.Context, *GetUserInfoByEmailRequest) (*GetUserInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfoByEmail not implemented")
 }
@@ -134,6 +150,24 @@ func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&UserService_ServiceDesc, srv)
+}
+
+func _UserService_CheckCreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCheckCreateUserReqeust)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).CheckCreateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_CheckCreateUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).CheckCreateUser(ctx, req.(*GetCheckCreateUserReqeust))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _UserService_GetUserInfoByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -215,6 +249,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "user.UserService",
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CheckCreateUser",
+			Handler:    _UserService_CheckCreateUser_Handler,
+		},
 		{
 			MethodName: "GetUserInfoByEmail",
 			Handler:    _UserService_GetUserInfoByEmail_Handler,
