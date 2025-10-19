@@ -14,6 +14,18 @@ type userService struct {
 	userUseCase domain.UserUseCase
 }
 
+func (s *userService) CheckCreateUser(ctx context.Context, req *userpb.GetCheckCreateUserReqeust) (*userpb.GetCheckCreateUserResponse, error) {
+	if err := s.userUseCase.CheckCanCreateByEmailOrName(ctx, req.GetEmail(), req.GetName()); err != nil {
+		return &userpb.GetCheckCreateUserResponse{
+			Ok: false,
+		}, nil
+	}
+
+	return &userpb.GetCheckCreateUserResponse{
+		Ok: true,
+	}, nil
+}
+
 func (s *userService) GetUserInfoByEmail(ctx context.Context, req *userpb.GetUserInfoByEmailRequest) (*userpb.GetUserInfoResponse, error) {
 	user, err := s.userUseCase.FindUserByEmail(ctx, req.GetEmail())
 	if err != nil {
