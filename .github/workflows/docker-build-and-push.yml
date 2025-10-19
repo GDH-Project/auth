@@ -16,10 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: 저장소 이름 소문자로 변경
-        run: |
-          echo "REPO=${${{github.repository}}@L}" >> $GITHUB_ENV
-
       - uses: docker/setup-qemu-action@v3
 
       - uses: docker/setup-buildx-action@v3
