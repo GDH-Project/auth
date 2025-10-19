@@ -7,7 +7,7 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 go build -trimpath -a -installsuffix cgo -ldflags="-w -s" -o main ./cmd
+RUN CGO_ENABLED=0 go build -trimpath -ldflags="-w -s" -o main ./cmd
 
 # ==================
 # 메인 이미지
