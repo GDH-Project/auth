@@ -13,6 +13,13 @@ type userUseCase struct {
 	userSvc domain.UserService
 }
 
+func (uc *userUseCase) CheckCanCreateByEmailOrName(ctx context.Context, email string, name string) *apperror.Error {
+	return uc.userSvc.CheckCanCreate(ctx, &domain.User{
+		Email: email,
+		Name:  name,
+	})
+}
+
 func (uc *userUseCase) CreateUser(ctx context.Context, user *domain.User) *apperror.Error {
 	// 생성 가능한 유저인지 확인
 	if err := uc.userSvc.CheckCanCreate(ctx, user); err != nil {
@@ -32,7 +39,6 @@ func (uc *userUseCase) CreateUser(ctx context.Context, user *domain.User) *apper
 	}
 
 	createUserData := &domain.User{
-		ID:       user.ID,
 		Name:     user.Name,
 		Email:    user.Email,
 		Password: hashedPassword,

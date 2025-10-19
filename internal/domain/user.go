@@ -40,6 +40,7 @@ type UserService interface {
 }
 
 type UserUseCase interface {
+	CheckCanCreateByEmailOrName(ctx context.Context, email string, name string) *apperror.Error
 	CreateUser(ctx context.Context, user *User) *apperror.Error
 	UpdateUserByUserID(ctx context.Context, user *User) *apperror.Error
 	DeleteUserByUserIDAndPassword(ctx context.Context, id string, password string) *apperror.Error
