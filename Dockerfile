@@ -1,5 +1,3 @@
-LABEL org.opencontainers.image.source="https://github.com/GDH-Project/auth"
-
 FROM golang:latest AS builder
 
 WORKDIR /app
@@ -15,6 +13,8 @@ RUN CGO_ENABLED=0 go build -trimpath -ldflags="-w -s" -o main ./cmd
 # 메인 이미지
 # ==================
 FROM alpine:latest
+
+LABEL org.opencontainers.image.source="https://github.com/GDH-Project/auth"
 
 RUN apk --no-cache add ca-certificates tzdata
 
