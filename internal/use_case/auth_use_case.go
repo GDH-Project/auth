@@ -80,8 +80,8 @@ func (uc *authUseCase) LoginWithPassword(ctx context.Context, email string, pass
 	// 유저 조회
 	user, appErr := uc.userSvc.FindUserByEmail(ctx, email)
 	if appErr != nil {
-		zap.S().Debug("if 문 진입",
-			"user", user,
+		zap.S().Debug("사용자가 존재하지 않습니다.",
+			"email", email,
 		)
 		return nil, appErr
 	}
@@ -106,7 +106,16 @@ func (uc *authUseCase) LoginWithPassword(ctx context.Context, email string, pass
 
 	// 로그인 성공 로그 삽입
 	log.Status = domain.LoginStatusSuccess
-	_ = uc.authSvc.InsertLoginLog(ctx, log)
+	err = uc.authSvc.InsertLoginLog(ctx, log)
+	if err != nil {
+		zap.S().Infow("로그인 로그 삽입 불가",
+			zap.Error(err),
+			"userID", log.UserID,
+			"userIP", log.UserIP,
+			"userAgent", log.UserAgent,
+			"status", log.Status,
+		)
+	}
 
 	return token, nil
 
