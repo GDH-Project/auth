@@ -20,8 +20,7 @@ func (r *authRepository) GetTokenByUserIDOrToken(ctx context.Context, t *domain.
 	q := `
 			SELECT user_id, refresh_token, expires_at 
 			FROM auth.tokens 
-			WHERE (user_id = NULLIF($1, '')::uuid) 
-			  OR (refresh_token = NULLIF($2, '')) 
+			WHERE ( user_id = NULLIF($1, '')::uuid OR refresh_token = NULLIF($2, '')) 
 			  AND expires_at > NOW();
 `
 	if err := r.db.QueryRow(ctx, q,

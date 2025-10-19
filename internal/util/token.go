@@ -50,7 +50,7 @@ func VerifyJWTToken(secret []byte, tokenString string) (*JWTClaims, *apperror.Er
 			Code:        apperror.BadRequest,
 			UserMessage: "잘못된 접근입니다.",
 			DevMessage:  "토큰을 신뢰할 수 없습니다.",
-			StatusCode:  http.StatusNotFound,
+			StatusCode:  http.StatusBadRequest,
 			Cause:       nil,
 		}
 	}
