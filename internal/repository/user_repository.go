@@ -72,9 +72,6 @@ func (r *userRepository) Find(ctx context.Context, user *domain.User) (*domain.U
 			&u.Password,
 			&u.Role,
 		); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return &domain.User{}, nil
-		}
 		return nil, &apperror.Error{
 			Code:        apperror.UserNotFound,
 			UserMessage: "존재하지 않는 사용자입니다.",

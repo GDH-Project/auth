@@ -2,6 +2,7 @@ package domain
 
 import (
 	"context"
+	"net"
 	"time"
 )
 
@@ -16,7 +17,7 @@ const (
 
 type LoginLog struct {
 	UserID    string
-	UserIP    string
+	UserIP    net.IP
 	UserAgent string
 	Status    LoginStatus
 }
