@@ -1,3 +1,5 @@
+LABEL org.opencontainers.image.source="https://github.com/GDH-Project/auth"
+
 FROM golang:latest AS builder
 
 WORKDIR /app
