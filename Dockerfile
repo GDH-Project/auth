@@ -1,4 +1,4 @@
-LABEL org.opencontainers.image.source = "https://github.com/GDH-Project/auth"
+LABEL org.opencontainers.image.source="https://github.com/GDH-Project/auth"
 
 FROM golang:latest AS builder
 
