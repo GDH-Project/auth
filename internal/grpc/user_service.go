@@ -26,6 +26,34 @@ func (s *userService) CheckCreateUser(ctx context.Context, req *userpb.GetCheckC
 	}, nil
 }
 
+func (s *userService) GetUserInfoByUserID(ctx context.Context, req *userpb.GetUserInfoByUserIDRequest) (*userpb.GetUserInfoResponse, error) {
+	user, err := s.userUseCase.FindUserByUserID(ctx, req.GetUserId())
+	if err != nil {
+		zap.S().Infow("id에 해당하는 사용자를 찾을 수 없습니다.", zap.Error(err),
+			"id", req.GetUserId(),
+		)
+		return nil, errors.New("사용자를 찾을 수 없습니다")
+	}
+
+	var userRole userpb.UserRole
+	switch user.Role {
+	case domain.RoleUser:
+		userRole = userpb.UserRole_BASIC_USER
+	case domain.RoleDevice:
+		userRole = userpb.UserRole_DATA_USER
+	case domain.RoleAdmin:
+		userRole = userpb.UserRole_ADMIN
+	default:
+		userRole = userpb.UserRole_BASIC_USER
+	}
+
+	return &userpb.GetUserInfoResponse{
+		UserId: user.ID,
+		Name:   user.Name,
+		Email:  user.Email,
+		Role:   userRole,
+	}, nil
+}
 func (s *userService) GetUserInfoByEmail(ctx context.Context, req *userpb.GetUserInfoByEmailRequest) (*userpb.GetUserInfoResponse, error) {
 	user, err := s.userUseCase.FindUserByEmail(ctx, req.GetEmail())
 	if err != nil {
