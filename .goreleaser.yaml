@@ -8,6 +8,7 @@ before:
 
 builds:
   - main: ./cmd
+    skip: true
     binary: gdh-auth-server
     flags:
       - -trimpath
