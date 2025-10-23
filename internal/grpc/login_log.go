@@ -12,15 +12,11 @@ func makeLoginLog(ctx context.Context) *domain.LoginLog {
 	var userIP, userAgent string
 	md, _ := metadata.FromIncomingContext(ctx)
 
-	if xff := md.Get("x-forwarded-for"); len(xff) > 0 {
-		userIP = xff[0]
-	} else if xri := md.Get("x-real-ip"); len(xri) > 0 {
-		userIP = xri[0]
-	} else if xci := md.Get("x-client-ip"); len(xci) > 0 {
+	if xci := md.Get("x-client-ip"); len(xci) > 0 {
 		userIP = xci[0]
 	}
 
-	if ua := md.Get("user-agent"); len(ua) > 0 {
+	if ua := md.Get("x-user-agent"); len(ua) > 0 {
 		userAgent = ua[0]
 	}
 

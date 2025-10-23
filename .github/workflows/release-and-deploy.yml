@@ -1,9 +1,8 @@
-name: Release
+name: Release And Deploy
 on:
   push:
     tags:
       - "v*.*.*"
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -12,8 +11,6 @@ permissions:
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
-
-
     steps:
       - uses: actions/checkout@v5
         with:
@@ -36,5 +33,14 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
+  deploy:
+    needs: goreleaser
+    runs-on: ubuntu-latest
+    container: ghcr.io/railwayapp/cli:latest
+    env:
+      SVC_ID: ${{secrets.SERVICE_ID}}
+      RAILWAY_TOKEN: ${{secrets.RAILWAY_TOKEN}}
+    steps:
+      - name: deploy new docker image
+        run: railway redeploy -s ${{env.SVC_ID}} -y
 
