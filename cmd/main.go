@@ -21,6 +21,10 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
+var (
+	Version = "dev"
+)
+
 func main() {
 	debug := flag.Bool("debug", false, "enable debug mode")
 	if !*debug {
@@ -29,6 +33,7 @@ func main() {
 	flag.Parse()
 
 	config.InitLogger(*debug)
+	zap.L().Info("GDH Project Auth Server", zap.String("version", Version))
 	cfg := config.GetConfig()
 
 	db := resource.InitDB(cfg)
