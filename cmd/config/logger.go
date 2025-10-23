@@ -15,6 +15,7 @@ func InitLogger(isDebugMode bool) {
 	cfg.EncoderConfig.EncodeDuration = zapcore.MillisDurationEncoder
 
 	logger, _ := cfg.Build()
+	defer logger.Sync()
 
 	logger.Info("Init Logger OK")
 
