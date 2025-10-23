@@ -1,15 +1,20 @@
 package config
 
-import "go.uber.org/zap"
+import (
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+)
 
 func InitLogger(isDebugMode bool) {
-	var logger *zap.Logger
-
+	var cfg zap.Config
 	if isDebugMode {
-		logger, _ = zap.NewDevelopment()
+		cfg = zap.NewDevelopmentConfig()
 	} else {
-		logger, _ = zap.NewProduction()
+		cfg = zap.NewProductionConfig()
 	}
+	cfg.EncoderConfig.EncodeDuration = zapcore.MillisDurationEncoder
+
+	logger, _ := cfg.Build()
 	defer logger.Sync()
 
 	logger.Info("Init Logger OK")
